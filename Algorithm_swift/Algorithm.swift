@@ -75,11 +75,11 @@ extension Array where Element:Comparable {
     ///   - a: 数组a
     ///   - left: 左边索引
     ///   - right: 右边索引
-    private mutating func quickSort(left: Int, right: Int) {
+    private mutating func quickSort(left: Int, right: Int) -> Array {
         
         // 排序完毕，退出递归
         if left >= right {
-            return
+            return self
         }
         
         // 每一趟划分，使左边的比基准小，右边的比基准大，并返回新的基准的位置
@@ -87,16 +87,17 @@ extension Array where Element:Comparable {
         
         // 判断左边是否排完，没排完递归排左边部分
         if baseIndex - 1 > left {
-            quickSort(left: left, right: baseIndex - 1)
+            self = quickSort(left: left, right: baseIndex - 1)
         }
         // 判断右边是否排完，没排完递归排右边部分
         if baseIndex + 1 < right {
-            quickSort(left: baseIndex + 1, right: right)
+           self = quickSort(left: baseIndex + 1, right: right)
         }
+        return self
     }
     
-    mutating func quickSort() {
-        quickSort(left: 0, right: self.count-1)
+    mutating func quickSort() -> Array {
+        return quickSort(left: 0, right: self.count-1)
     }
     
 }
@@ -115,7 +116,7 @@ extension Array where Element:Comparable {
  */
 extension Array where Element:Comparable {
     
-    mutating func selectorSort() {
+    mutating func selectorSort() -> Array {
         
         var min = 0
         // 只需要n-1趟即可，到最后一趟只有一个元素，一定是最小的了
@@ -136,6 +137,7 @@ extension Array where Element:Comparable {
             }
             
         }
+        return self
     }
     
 }
@@ -146,7 +148,7 @@ extension Array where Element:Comparable {
  */
 extension Array where Element:Comparable {
     
-    mutating func bubbleSort() {
+    mutating func bubbleSort() -> Array {
     
         
         for i in 0..<self.count-1 {
@@ -157,7 +159,39 @@ extension Array where Element:Comparable {
                 }
             }
         }
+        return self
         
     }
+}
+
+
+// MARK: - 优化冒泡排序
+/**
+ * a = [2,1,3,4,5,6,7,8,9]
+ * a数组在使用传统冒泡排序时，在i=2之后的遍历都是多余的，因为剩下的数据已经是有序的了。
+ */
+extension Array where Element:Comparable {
+    
+    mutating func optimizeBubbleSort()->Array {
+        
+        /* 设置一个标志 若flag为true说明有过数据交换，继续排序；否则说明数组已经是有序的了，停止循环 */
+        var flag = true
+        for i in 0..<self.count-1 {
+            guard flag else {
+                return self
+            }
+            flag = false
+            for j in (i+1...self.count-1).reversed() {
+                // 后者小于前者，交换位置，即小的往上升大的往下沉
+                if self[j] < self[j-1] {
+                    swap(i: j, j: j-1)
+                    flag = true
+                }
+            }
+        }
+        return self
+        
+    }
+    
 }
 
