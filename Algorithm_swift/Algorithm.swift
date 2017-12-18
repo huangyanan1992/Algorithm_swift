@@ -14,10 +14,7 @@ extension Array {
     
     fileprivate mutating func swap(i:Int,j:Int) {
         
-        let temp = self[i]
-        self[i] = self[j]
-        self[j] = temp
-        
+        (self[i], self[j]) = (self[j], self[i])
     }
 }
 
@@ -37,9 +34,9 @@ extension Array {
  *
  */
 
-extension Array where Element:Comparable {
+extension Array where Element: Comparable {
 
-    private mutating func quickPartition(left:Int, right:Int)->Int {
+    private mutating func quickPartition(left: Int, right: Int) -> Int {
         
         var right = right
         var left = left
@@ -60,9 +57,10 @@ extension Array where Element:Comparable {
         }
         
         // 交换 左边比base大的数和右边比base小的数
-        swap(i: left,j: right)
+        swap(i: left, j: right)
+        
         // 交换左边比base大的数和基准数
-        swap(i: baseIndex,j: left)
+        swap(i: baseIndex, j: left)
         
         // 返回新的基准数
         return left
